@@ -1,0 +1,270 @@
+@CHARSET "ISO-8859-1";
+
+.mrofl-map {
+	position: absolute;
+	left: 0px;
+	right: 0px;
+	top: 0px;
+	bottom: 0px;
+	width: 100%;
+	height: 100%;
+	margin: 20px;
+	border: 5px #cccccc solid;
+	
+	font-family: "Impact", "Charcoal", sans-serif;
+	color: #555555;
+}
+
+.mrofl-map div {
+	position: relative;
+	margin: 0px;
+	padding: 0px;
+	display: block;
+}
+
+.mrofl-map.max {
+	position: fixed;
+	left: 0px;
+	right: 0px;
+	top: 0px;
+	bottom: 0px;
+	width: 100%;
+	height: 100%;
+	margin: 0px;
+	border: none;
+}
+
+.mrofl-map .minimizer, .mrofl-map .maximizer {
+	position: absolute;
+	z-index: 10000;
+	cursor: pointer;
+	display: block;
+	width: 32px;
+	height: 32px;
+}
+
+.mrofl-map .minimizer {
+	top: 10px;
+	right: 10px;
+	visibility: hidden;
+	background-image: url("../images/arrow_min.png");
+}
+
+.mrofl-map .maximizer {
+	top: -16px;
+	right: -16px;
+	visibility: visible;
+	background-image: url("../images/arrow_max.png");
+}
+
+.mrofl-map.max .minimizer {
+	top: 10px;
+	right: 10px;
+	visibility: visible;
+}
+
+.mrofl-map.max .maximizer {
+	top: 10px;
+	right: 10px;
+	visibility: hidden;
+}
+
+.mrofl-map h1,
+.mrofl-map h2,
+.mrofl-map h3,
+.mrofl-map h4,
+.mrofl-map h5,
+.mrofl-map h6 {
+	margin: 10px auto;
+	font-weight: normal;
+}
+
+.mrofl-map h2 {
+	font-size: 25px;
+}
+
+.mrofl-map h3 {
+	font-size: 20px;
+}
+
+.mrofl-map div {
+  margin: 0px auto;
+  padding: 0px;
+  position: relative;
+}
+			
+.mrofl-map svg, .mrofl-map g {
+	overflow: visible;
+}
+			
+svg, g {
+	overflow: visible;
+	display: block;
+}
+
+
+.mrofl-map .compass .back {
+  fill: #eee;
+  fill-opacity: .8;
+}
+
+.mrofl-map .compass .fore {
+  stroke: #999;
+  stroke-width: 1.5px;
+}
+
+.mrofl-map .compass rect.back.fore {
+  fill: #999;
+  fill-opacity: .3;
+  stroke: #eee;
+  stroke-width: 1px;
+  shape-rendering: crispEdges;
+}
+
+.mrofl-map .compass .direction {
+  fill: none;
+}
+
+.mrofl-map .compass .chevron {
+  fill: none;
+  stroke: #999;
+  stroke-width: 5px;
+}
+
+.mrofl-map .compass .zoom .chevron {
+  stroke-width: 4px;
+}
+
+.mrofl-map .compass .active .chevron,
+.mrofl-map .compass .chevron.active {
+  stroke: #fff;
+}
+
+.mrofl-map .compass.active .active .direction {
+  fill: #999;
+}
+
+.mrofl-map .map {
+	position: absolute;
+	left: 0px;
+	right: 0px;
+	top: 0px;
+	bottom: 0px;
+	width: 100%;
+	height: 100%;
+  	overflow: visible;
+}
+
+.mrofl-map .canvas {
+  position: absolute;
+}
+
+.mrofl-map .timelineContainer {
+	text-align: center;
+	position: absolute;
+	left: 0px;
+	right: 0px;
+	bottom: 0px;
+	width: 100%;
+	height: 200px;
+	border-top: 2px groove #ffffff;
+}
+
+.mrofl-map .timelineContainer .transparency {
+	position: absolute;
+	left: 0px;
+	right: 0px;
+	top: 0px;
+	bottom: 0px;
+	width: 100%;
+	height: 100%;
+	background-color: #eeeeee;
+	opacity: 0.4;
+	filter: alpha(opacity=40);
+}
+
+.mrofl-map .timelinePanel {
+  height: 200px;
+  overflow: visible;
+  position: relative;
+}
+
+.mrofl-map .loadingOverlay {
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	right: 0px;
+	bottom: 0px;
+	width: 100%
+	height: 100%;
+	z-index: 1001;
+	background-color: #666666;
+	filter: alpha(opacity=70);
+	opacity: 0.7;
+}
+
+.mrofl-map #detailPanel {
+	position: fixed;
+	width: 2px;
+	height: 2px;
+	padding: 0px 10px;
+	border: 2px solid #bf9b30;
+	z-index: 3000;
+	background-color: #ffffff;
+	color: #000000;
+	font-size: 13px;
+	font-weight: bold;
+	font-family: "Verdana";
+	overflow: scroll;
+	display: none;
+}
+
+.mrofl-map #detailPanel h3 {
+	width: 100%;
+	margin: 0px auto;
+	padding: 0px;
+	line-height: 30px;
+	font-size: 18px;
+	font-family: "Rockwell Extra Bold";
+	text-align: center;
+	color: #444444;
+}
+
+.mrofl-map #detailPanel table {
+	width: 100%;
+	border: 1px solid #cccccc;
+}
+
+.mrofl-map #detailPanel table td {
+	vertical-align: middle;
+	border: 1px dotted #cccccc;
+	padding: 5px;
+}
+
+.mrofl-map #detailPanel table td.author {
+	width: 225px;
+	text-align: right;
+}
+
+.mrofl-map #detailPanel table td.recipient {
+	width: 225px;
+	text-align: left;
+}
+
+.mrofl-map #detailPanel table td.letter {
+	width: 120px;
+	text-align: center;
+}
+
+.mrofl-map #detailPanel table td.letter img {
+	border: none;
+	outline: none;
+}
+
+
+
+
+
+
+
+

@@ -1,0 +1,82 @@
+@CHARSET "ISO-8859-1";
+body {
+	background: #ffffff;
+	margin: 0px;
+	padding: 0px;
+}
+
+div {
+  margin: 0px auto;
+  padding: 0px;
+  position: relative;
+}
+
+#mapContainer {
+	width: 800px;
+	height: 600px;
+}
+
+.controlPanel {
+	position: absolute;
+	left: 0px;
+	top: 0px;
+	bottom: 0px;
+	height: 100%;
+	padding: 10px;
+	z-index: 1000;
+	width: 300px;
+	border-right: 2px #ffffff ridge;
+	border-bottom: 2px #ffffff ridge;
+}
+
+.controlPanel h1,
+.controlPanel h2,
+.controlPanel h3,
+.controlPanel h4,
+.controlPanel h5,
+.controlPanel h6 {
+	margin: 10px auto;
+	font-weight: normal;
+	font-family: "Impact", "Charcoal", sans-serif;
+	color: #555555;
+}
+
+.controlPanel .transparency {
+	position: absolute;
+	left: 0px;
+	top: 0px;
+	right: 0px;
+	bottom: 0px;
+	z-index: 1001;
+	width: 100%;
+	height: 100%;
+	background-color: #ffffff;
+	opacity: 0.4;
+}
+
+.controlPanel .content {
+	z-index: 1002;
+}
+
+.controlPanel a {
+	text-decoration: none;
+	color: #666666;
+}
+
+.controlPanel a:hover {
+	color: #e65217;
+}
+
+.controlPanel .layers {
+	height: 500px;
+	overflow-y: scroll;
+}
+
+.controlPanel .layer {
+	border: 1px dotted #555555;
+}
+
+
+
+
+
