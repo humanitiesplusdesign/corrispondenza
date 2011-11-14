@@ -3,7 +3,7 @@
 <head>
 <title>Republic Of Letters Network Visualization</title>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<link rel="stylesheet" type="text/css" href="main-new.css"/>
+<link rel="stylesheet" type="text/css" href="stylesheets/main.css"/>
 <link rel="stylesheet" type="text/css" href="stylesheets/mrofl-map.css"/>
 <link rel="stylesheet" type="text/css" href="stylesheets/tipsy.css" />
 
