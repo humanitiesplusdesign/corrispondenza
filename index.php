@@ -20,6 +20,17 @@
 </script>
 </head>
 <body onload="initMapVis()">
+<div class="loader">
+	<table>
+		<tr></tr>
+		<tr>
+			<td>
+				<img src="images/loading.gif" />
+			</td>
+		</tr>
+		<tr></tr>
+	</table>
+</div>
 <div id="mainContainer" align="center">
 	<div id="mapContainer"></div>
 	<div class="controlPanel">
@@ -30,10 +41,32 @@
 			<div class="layers">
 			</div>
 		</div>
+		<div class="pulloutTab">
+			<div class="transparency"></div>
+			&larr;
+		</div>
 	</div>
 </div>
 
 <script type="text/javascript">
+	var controlPanelVisible = true;
+	$('.controlPanel .pulloutTab').click(function()
+        {
+        	if(controlPanelVisible)
+        	{
+        		$('.controlPanel').animate({left:'-320px'}, 250);
+        		$('.controlPanel .pulloutTab').html('&rarr;');
+        		controlPanelVisible = false;
+        	}
+        	else
+        	{
+        		$('.controlPanel').animate({left:'0px'}, 250);
+        		$('.controlPanel .pulloutTab').html('&larr;');
+        		controlPanelVisible = true;
+        	}
+        }
+    );
+
 	var mroflMap = null;
 	var layers = [];
 	function initMapVis()
@@ -43,23 +76,37 @@
 
 	function addLayer()
 	{
-		var layerNum = ++layers.length;
+		var layerNum = layers.length;
 		var layer = $('<div class="layer layer_' + layerNum + '">');
-		layer.append($('<h4>Layer ' + layerNum + '</h4>'));
-		layer.append($('<div><input type="text" id="layer_' + layerNum + '_name" /></div>'));
-		layer.append($('<div><button type="button" id="layer_' + layerNum + '_btRefresh">Refresh</button></div>'));
+		var layerNameInputId = 'layer_' + layerNum + '_name';
+		var layerRefreshButtonId = 'layer_' + layerNum + '_btRefresh'
+		layer.append($('<h4>Layer ' + (layerNum + 1) + '</h4>'));
+		layer.append($('<div><input type="text" id="' + layerNameInputId + '" /></div>'));
+		layer.append($('<div><button type="button" id="' + layerRefreshButtonId + '">Refresh</button></div>'));
 		$('.controlPanel .layers').append(layer);
 		layers.push({'layer':layer, 'id':-1});
 
-		$('#layer_' + layerNum + '_btRefresh').click(function(){
+		$('#' + layerNameInputId).focus();
+
+		$('#' + layerRefreshButtonId).click(function(){
 			var num = $(this).attr('id').split('_');
 			num = parseInt(num[1]);
 			refreshLayer(num);
 		});
+		
+		$('#' + layerNameInputId).keypress(function(event)
+        {
+	        if(event.keyCode == 13)
+	        {
+	            $('#' + layerRefreshButtonId).focus();
+	            $('#' + layerRefreshButtonId).click();
+	        }
+        });
 	}
 
 	function refreshLayer(layerNum)
 	{
+		showLoader();
 		var curLayer = layers[layerNum];
 		if(curLayer.id < 0)
 		{
@@ -69,6 +116,17 @@
 		{
 			mroflMap.refreshLayer(curLayer.id, $('#layer_' + layerNum + '_name').val());
 		}
+		hideLoader();
+	}
+
+	function showLoader()
+	{
+		$('.loader').show();
+	}
+
+	function hideLoader()
+	{
+		$('.loader').hide();
 	}
 </script>
 
