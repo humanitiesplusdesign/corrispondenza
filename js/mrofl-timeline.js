@@ -20,7 +20,7 @@ MroflTimeline.prototype.init = function(obj)
     var ptr = 0;
     for( var i = obj.minX; i <= obj.maxX; ++i )
     {
-    	if( i % 10 == 0 )
+    	if( i % 1 == 0 )
     	{
     		h_ticks[ptr++] = i;
     	}
@@ -50,6 +50,7 @@ MroflTimeline.prototype.init = function(obj)
 	        .anchor( "bottom" )
 	        .add( pv.Label )
 	        	.bottom( 0 )
+	        	.visible(function(d){ return (d % 10) == 0; })
 	        	.textStyle("#444444");
 	
 	obj.timeline.add( pv.Rule )
@@ -65,6 +66,7 @@ MroflTimeline.prototype.init = function(obj)
 	
 	/** *******Populate timeline******** */
 	var barWidth = obj.xScale(obj.maxX) - obj.xScale(obj.maxX - 1) - 0.5;
+	barWidth *= 2/3;
 	var timelineColors = [pv.color("#666666").alpha(.3), pv.color("#e65217").alpha(.6)];
 
 	for(var year in obj.data[0])
@@ -73,7 +75,7 @@ MroflTimeline.prototype.init = function(obj)
 		obj.timeline.add(pv.Bar)
 			.data([data])
 			.def('highlight', -1)
-	        .left(function(d){ return obj.xScale(d.year) + 30; })
+	        .left(function(d){ return obj.xScale(d.year) + 30 + 0.5 * (barWidth); })
 	        .bottom(15)
 	        .width(barWidth)
 	        .height(function(d){ return d.volume > 0 ? obj.yScale(d.volume) : 0; })
