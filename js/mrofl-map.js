@@ -51,10 +51,11 @@ function MroflMap( canvas )
     this.startYear = 1730;
     this.endYear = 1760;
     this.maxPlottableLetters = 0;
+    this.maxLineVolume = 0;
 
     // Line size limits
-    this.minLineWidth = 2.0;
-    this.maxLineWidth = 10.0;
+    this.minLineWidth = 5.0;
+    this.maxLineWidth = 35.0;
 
     // UI dimensions
     this.minWidth = 600;
@@ -71,7 +72,8 @@ function MroflMap( canvas )
 
     // Scales
     this.nodeScale = pv.Scale.log( 1, 200 ).range( 5, 40 );
-    this.zoomScale = pv.Scale.linear( this.minZoom, this.maxZoom ).range( 0.5, 1 );
+    this.dotZoomScale = pv.Scale.linear( this.minZoom, this.maxZoom ).range( 0.2, 1 );
+    this.lineZoomScale = pv.Scale.linear( this.minZoom, this.maxZoom ).range( 0.3, 1 );
 
     this.init();
 }
@@ -205,11 +207,13 @@ MroflMap.prototype.addLayer = function( person )
         dataType : 'text'
     } );
 
-    var response = jsonParse( response.responseText );
+    response = jsonParse( response.responseText );
     this.minYear = response.minYear;
     this.maxYear = response.maxYear;
     this.maxLetters = response.maxLetters;
     this.maxPlottableLetters = Math.max( this.maxPlottableLetters, response.maxPlottableLetters );
+    this.maxLineVolume = Math.max(this.maxLineVolume, response.maxLineVolume);
+    if(this.maxLineVolume == 0){this.maxLineVolume = 9999;}
     this.incompletes = response.incompletes;
     this.volumes = response.volumes;
     if( this.maxYear >= this.minYear )
@@ -247,11 +251,13 @@ MroflMap.prototype.refreshLayer = function( layerId, person )
         dataType : 'text'
     } );
 
-    var response = jsonParse( response.responseText );
+    response = jsonParse( response.responseText );
     this.minYear = response.minYear;
     this.maxYear = response.maxYear;
     this.maxLetters = response.maxLetters;
     this.maxPlottableLetters = Math.max( this.maxPlottableLetters, response.maxPlottableLetters );
+    this.maxLineVolume = Math.max(this.maxLineVolume, response.maxLineVolume);
+    if(this.maxLineVolume == 0){this.maxLineVolume = 9999;}
     this.incompletes = response.incompletes;
     this.volumes = response.volumes;
     if( this.maxYear >= this.minYear )
@@ -378,6 +384,9 @@ MroflMap.prototype.drawLocationsLayer = function( layerId, tile, projection )
 
     curLayer.vis = new pv.Panel().canvas( g ).width( obj.map.size().x ).height( obj.map.size().y ).left( 0 ).top( 0 );
 
+    // For transparent blue dot: #1e78b4
+    var dotScale = obj.dotZoomScale(obj.map.zoom());
+    console.log(dotScale);
     for( locID in curLayer.dots )
     {
         var data = [curLayer.dots[locID]];
@@ -397,10 +406,10 @@ MroflMap.prototype.drawLocationsLayer = function( layerId, tile, projection )
             } ).y;
         } ).radius( function( d )
         {
-            return 5;
-//            return obj.nodeScale( d.volume )/* * obj.zoomScale(obj.map.zoom()) */;
-        } ).lineWidth( 2 ).strokeStyle( pv.color( '#1e78b4' ).alpha( .3 ) ).fillStyle(
-                pv.color( '#1e78b4' ).alpha( .08 ) ).cursor( "pointer" ).visible( function( d )
+            return Math.max(5, (15 * dotScale));
+//            return obj.nodeScale( d.volume )/* * obj.dotZoomScale(obj.map.zoom()) */;
+        } ).lineWidth( 1 ).strokeStyle( pv.color( '#ffffff' ).alpha( .7 ) ).fillStyle(
+                pv.color( '#ffffff' ).alpha( .5 ) ).cursor( "pointer" ).visible( function( d )
         {
             return d.volume > 0;
         } ).title( function( d )
@@ -511,20 +520,14 @@ MroflMap.prototype.updatePVLayer = function( layerId )
         {
             this.layers[layerId].persistentLines[lineId] = ( [
             {
-                coords :
-                {
-                    lat : src.lat,
-                    lon : src.lon
-                },
+                lat : src.lat,
+                lon : src.lon,
                 name : src.name,
                 volume : 0
             },
             {
-                coords :
-                {
-                    lat : dst.lat,
-                    lon : dst.lon
-                },
+                lat : dst.lat,
+                lon : dst.lon,
                 name : dst.name,
                 volume : 0
             }] );
@@ -621,26 +624,26 @@ MroflMap.prototype.drawPVLayer = function( layerId, tile, projection )
         g = curLayer.tile.element;
     }
 
-    var lines = curLayer.lines;
-    var persistentLines = curLayer.persistentLines;
-
     curLayer.vis.children = [];
     curLayer.vis = new pv.Panel().canvas( g ).width( obj.map.size().x ).height( obj.map.size().y ).left( 0 ).top( 0 );
 
-    var grayLine = pv.color( "#333333" ).alpha( .05 );
+    var lineScale = obj.lineZoomScale(obj.map.zoom());
+    
+    var grayLine = pv.color( "#666666" ).alpha( .2 );
     for( i in curLayer.persistentLines )
     {
         var line = curLayer.persistentLines[i];
 
         var thickness = this.minLineWidth
-                + ( ( line[0].volume / this.maxPlottableLetters ) * ( this.maxLineWidth - this.minLineWidth ) );
+                + ( ( line[0].volume / this.maxLineVolume ) * ( this.maxLineWidth - this.minLineWidth ) );
+        thickness *= lineScale;
 
         if(!this.lineEcc[i])
         {
             this.lineEcc[i] = (Math.random() * 0.8) + 0.15;
         }
         
-        var eccentricity = this.lineEcc[i];
+        var eccentricity = this.lineEcc[i] + 0.05;
         curLayer.vis.add( pv.Line )
             .data( line )
             .def( "id", i )
@@ -666,7 +669,8 @@ MroflMap.prototype.drawPVLayer = function( layerId, tile, projection )
         var line = curLayer.lines[i];
 
         var thickness = this.minLineWidth
-                + ( ( line[0].volume / this.maxPlottableLetters ) * ( this.maxLineWidth - this.minLineWidth ) );
+                + ( ( line[0].volume / this.maxLineVolume ) * ( this.maxLineWidth - this.minLineWidth ) );
+        thickness *= lineScale;
         
         if(!this.lineEcc[i])
         {

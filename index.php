@@ -79,7 +79,7 @@
 		var layerNum = layers.length;
 		var layer = $('<div class="layer layer_' + layerNum + '">');
 		var layerNameInputId = 'layer_' + layerNum + '_name';
-		var layerRefreshButtonId = 'layer_' + layerNum + '_btRefresh'
+		var layerRefreshButtonId = 'layer_' + layerNum + '_btRefresh';
 		layer.append($('<h4>Layer ' + (layerNum + 1) + '</h4>'));
 		layer.append($('<div><input type="text" id="' + layerNameInputId + '" /></div>'));
 		layer.append($('<div><button type="button" id="' + layerRefreshButtonId + '">Refresh</button></div>'));

@@ -65,7 +65,7 @@ MroflTimeline.prototype.init = function(obj)
 	
 	/** *******Populate timeline******** */
 	var barWidth = obj.xScale(obj.maxX) - obj.xScale(obj.maxX - 1) - 0.5;
-	var timelineColors = [pv.color("#666666").alpha(.2), pv.color("#e65217").alpha(.6)];
+	var timelineColors = [pv.color("#666666").alpha(.3), pv.color("#e65217").alpha(.6)];
 
 	for(var year in obj.data[0])
 	{
@@ -81,7 +81,7 @@ MroflTimeline.prototype.init = function(obj)
 	        .strokeStyle('none')
 	        .lineWidth(0.5)
 	        .cursor('pointer')
-	        .title(function(d){ return "Unplotted: " + d.volume + " letter(s)"; })
+	        .title(function(d){ return d.year + " (Unplotted): " + d.volume + " letter(s)"; })
 	        .event('mousemove', function(){ this.highlight(this.index); this.render(); })
 	        .event('mouseout', function(){ this.highlight(-1); this.render(); })
 	        .event('mouseover', pv.Behavior.tipsy({gravity: 's'}));
@@ -101,7 +101,7 @@ MroflTimeline.prototype.init = function(obj)
 	        .strokeStyle('none')
 	        .lineWidth(0.5)
 	        .cursor('pointer')
-	        .title(function(d){ return "Plotted: " + d.volume + " letter(s)"; })
+	        .title(function(d){ return d.year + " (Plotted): " + d.volume + " letter(s)"; })
 	        .event('mousemove', function(){ this.highlight(this.index); this.render(); })
 	        .event('mouseout', function(){ this.highlight(-1); this.render(); })
 	        .event('mouseover', pv.Behavior.tipsy({gravity: 's'}));
