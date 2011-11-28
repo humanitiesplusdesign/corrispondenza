@@ -75,7 +75,35 @@ function ApiGetMapData()
 {
 	$name = GetRequiredQueryParameter('name');
 	$name = str_replace(' ', '+', $name);
+	
+	// Cache locations
+	$locations = array();
 
+	$action = "query";
+	$collection = "MPlace";
+	$limit = null;
+	$filter = array(
+		'_id' => true,
+		'lon' => true,
+		'lat' => true,
+	);
+
+	$existsQuery = array('$exists' => true);
+	$query = array('Coords' => $existsQuery);
+
+	$results = doQuery($action, $collection, $query, $limit, $filter);
+	$results = $results['result'];
+
+	for($i = 0; $i < count($results); ++$i)
+	{
+		$location = $results[$i];
+		$uid = $location['_id'];
+		$location['lon'] = floatval($location['lon']);
+		$location['lat'] = floatval($location['lat']);
+		$locations[$uid] = $location;
+	}
+
+	// Get map data
 	$minYear = 9999;
 	$maxYear = 0;
 	$volumes = new ArrayObject();
@@ -109,16 +137,8 @@ function ApiGetMapData()
 	$recipientRawQuery = array('RecipientRaw' => $personRegex);
 	$nameQuery = array($authorQuery, $authorRawQuery, $recipientQuery, $recipientRawQuery);
 
-	$existsQuery = array('$exists' => true);
-	$doesNotExistQuery = array('$exists' => false);
-
 	$query = array(
 		'$or' => $nameQuery,
-// 		'SourceMPlace' => $existsQuery,
-// 		'DestinationMPlace' => $existsQuery,
-// 		'SourceMPlace' => $doesNotExistQuery,
-// 		'DestinationMPlace' => $doesNotExistQuery,
-// 		'Date' => $doesNotExistQuery,
 	);
 
 	$result = doQuery($action, $collection, $query, $limit, $filter);
@@ -138,7 +158,9 @@ function ApiGetMapData()
 					if(isset($letter['SourceMPlace'])
 					&& isset($letter['DestinationMPlace'])
 					&& !empty($letter['SourceMPlace'])
-					&& !empty($letter['DestinationMPlace']))
+					&& !empty($letter['DestinationMPlace'])
+					&& isset($locations[$letter['SourceMPlace']])
+					&& isset($locations[$letter['DestinationMPlace']]))
 					{
 						$lineId = GetLineId($letter['SourceMPlace'], $letter['DestinationMPlace']);
 						if(!isset($lines[$lineId]))
@@ -260,6 +282,37 @@ function GetRequiredQueryParameter($parameterName)
 	}
 
 	return $parameterValue;
+}
+
+function LocationHasCoords($locationId)
+{
+	$locations = array();
+	$dots = array();
+
+	$action = "query";
+	$collection = "MPlace";
+	$limit = null;
+	$filter = array(
+		'_id' => true,
+		'lon' => true,
+		'lat' => true,
+	);
+
+	$query = array('_id' => $locationId);
+
+	$results = doQuery($action, $collection, $query, $limit, $filter);
+	$results = $results['result'];
+	
+	if(count($results) == 0
+		|| !isset($results[0]['lon'])
+		|| !is_numeric($results[0]['lon'])
+		|| !isset($results[0]['lat'])
+		|| !is_numeric($results[0]['lat']))
+	{
+		return false;
+	}
+	
+	return true;
 }
 
 function ProcessRequest()
