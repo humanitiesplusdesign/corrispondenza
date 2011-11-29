@@ -11,9 +11,9 @@ function MroflMap( canvas )
     this.po = null;
     this._tile = null;
     this._projection = null;
-    this.minZoom = 3;
-    this.maxZoom = 10;
-    this.defaultZoom = 3;
+    this.minZoom = 2;
+    this.maxZoom = 11;
+    this.defaultZoom = 2.5;
 
     // /DATA
     this.letters = null;
@@ -142,7 +142,7 @@ MroflMap.prototype.initData = function()
 
 MroflMap.prototype.initDOM = function()
 {
-    this.content = $( '<div class="mrofl-map">' );
+    this.content = $( '<div class="mrofl-map max">' );
 
     this.mapCanvas = $( '<div class="map">' );
     this.content.append( this.mapCanvas );
@@ -178,8 +178,8 @@ MroflMap.prototype.initPMaps = function()
     this.map = this.po.map().container(
             this.mapCanvas[0].appendChild( this.po.svg( "svg" ) ).appendChild( this.po.svg( 'g' ) ) ).center(
     {
-        lat : 40,
-        lon : -30
+        lat : 18,
+        lon : -10
     } ).zoom( this.defaultZoom ).zoomRange( [this.minZoom, this.maxZoom] ).add( this.po.interact() );
 
     this.map.add( this.po.image().url(
@@ -408,8 +408,8 @@ MroflMap.prototype.drawLocationsLayer = function( layerId, tile, projection )
         {
             return Math.max(5, (15 * dotScale));
 //            return obj.nodeScale( d.volume )/* * obj.dotZoomScale(obj.map.zoom()) */;
-        } ).lineWidth( 1 ).strokeStyle( pv.color( '#ffffff' ).alpha( .7 ) ).fillStyle(
-                pv.color( '#ffffff' ).alpha( .5 ) ).cursor( "pointer" ).visible( function( d )
+        } ).lineWidth( 1 ).strokeStyle( pv.color( '#1e78b4' ).alpha( .2 ) ).fillStyle(
+                pv.color( '#ffffff' ).alpha( .4 ) ).cursor( "pointer" ).visible( function( d )
         {
             return d.volume > 0;
         } ).title( function( d )
