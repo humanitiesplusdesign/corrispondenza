@@ -8,6 +8,9 @@ function MroflTimeline(container, minX, maxX, minY, maxY, data, onchange, owner)
 	this.owner = owner;
 	this.container = container;
 	this.canvas = $('<div id="mrofl-timelinePanel">');
+	this.filterContainer = null;
+	this.keys = {};
+	
 	$('#' + this.container).append(this.canvas);
 	
 	this.update(minX, maxX, minY, maxY, data, onchange);
@@ -83,10 +86,10 @@ MroflTimeline.prototype.init = function(obj)
 	        .strokeStyle('none')
 	        .lineWidth(0.5)
 	        .cursor('pointer')
-	        .title(function(d){ return d.year + " (Unplotted): " + d.volume + " letter(s)"; })
+	        .text(function(d){ return "<h3>" + d.year + "</h3>" + d.volume + " unplotted"; })
 	        .event('mousemove', function(){ this.highlight(this.index); this.render(); })
 	        .event('mouseout', function(){ this.highlight(-1); this.render(); })
-	        .event('mouseover', pv.Behavior.tipsy({gravity: 's'}));
+	        .event('mouseover', pv.Behavior.tipsy({gravity: 's', fade: true, html: true}));
 	}
 
 	for(var year in obj.data[1])
@@ -103,10 +106,10 @@ MroflTimeline.prototype.init = function(obj)
 	        .strokeStyle('none')
 	        .lineWidth(0.5)
 	        .cursor('pointer')
-	        .title(function(d){ return d.year + " (Plotted): " + d.volume + " letter(s)"; })
+	        .text(function(d){ return "<h3>" + d.year + "</h3>" + d.volume + " plotted"; })
 	        .event('mousemove', function(){ this.highlight(this.index); this.render(); })
 	        .event('mouseout', function(){ this.highlight(-1); this.render(); })
-	        .event('mouseover', pv.Behavior.tipsy({gravity: 's'}));
+	        .event('mouseover', pv.Behavior.tipsy({gravity: 's', fade: true, html: true}));
 	}
 	
 //	obj.timeline.add(pv.Bar)
@@ -129,12 +132,20 @@ MroflTimeline.prototype.init = function(obj)
     var filterData = {x: obj.xScale(obj.start), dx: obj.xScale(obj.end) - obj.xScale(obj.start)};
 //    fx = pv.Scale.linear().range(0, obj.height - 85);
     
-    var filterContainer = obj.timeline.add(pv.Panel)
+    obj.filterContainer = obj.timeline.add(pv.Panel)
     			.left(30)
     			.width(obj.width - 60)
-    			.height(obj.height);
+    			.height(obj.height)
+    			.visible(true);
     
-    obj.tlFilter = filterContainer.add(pv.Bar)
+    $(document).keydown(function (e) {
+        if(e.which == 70 && e.shiftKey)
+        {
+            obj.filterContainer.visible(!obj.filterContainer.visible()).render();
+        }
+    });
+    
+    obj.tlFilter = obj.filterContainer.add(pv.Bar)
 				.data([filterData])
 			    .top(10)
 			    .left(function(d){ return d.x; })
@@ -170,7 +181,7 @@ MroflTimeline.prototype.init = function(obj)
 		    	});
 
 	var resizeLData = {x: obj.xScale(obj.start)};
-    obj.tlResizeL = filterContainer.add(pv.Bar)
+    obj.tlResizeL = obj.filterContainer.add(pv.Bar)
 			.data([resizeLData])
 			.def("highlight", false)
             .top(10)
@@ -200,7 +211,7 @@ MroflTimeline.prototype.init = function(obj)
 	    	});
 
 	var resizeRData = {x: obj.xScale(obj.end)};
-    obj.tlResizeR = filterContainer.add(pv.Bar)
+    obj.tlResizeR = obj.filterContainer.add(pv.Bar)
 			.data([resizeRData])
 			.def("highlight", false)
             .top(10)

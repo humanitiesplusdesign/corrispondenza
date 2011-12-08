@@ -11,7 +11,7 @@
 <script type="text/javascript" src="js/mrofl-timeline.js"></script>
 <script type="text/javascript" src="js/mrofl-map.js"></script>
 
-<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.4/jquery.min.js"></script>
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js"></script>
 <script type="text/javascript" src="js/polymaps/polymaps.min.js"></script>
 <script type="text/javascript" src="js/protovis-3.2/protovis-d3.2.js"></script>
 <script type="text/javascript" src="js/jquery.tipsy.js"></script>
@@ -37,7 +37,7 @@
 		<div class="transparency"></div>
 		<div class="content">
 			<h2>LAYERS</h2>
-			<h3><a href="javascript:addLayer()" title="Click to add new layer">+ Add New Layer</a></h3>
+			<h3><a href="javascript:addLayer()">+ Add New Layer</a></h3>
 			<div class="layers">
 			</div>
 		</div>
